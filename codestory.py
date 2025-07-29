@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-"""
-CodeStory - AI-Powered Documentation Generator
-Simple entry point for generating comprehensive tutorials from codebases.
-"""
 
 from tutorial_builder import execute_documentation_generation
 import sys
