@@ -3,8 +3,6 @@
 **Transform any codebase into a beginner-friendly tutorial in minutes**
 
 [![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://python.org)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![AI Powered](https://img.shields.io/badge/AI-Powered-ff6b6b.svg)](https://github.com/The-Pocket/CodeStory)
 
 ---
 
@@ -35,7 +33,7 @@ cd CodeStory
 pip install -r dependencies.txt
 
 # Set up your AI API key
-echo "GOOGLE_API_KEY=your_api_key_here" > .env
+echo "GOOGLE_API_KEY=your_api_key_here" .env
 ```
 
 ### Generate Your First Tutorial
@@ -278,38 +276,13 @@ We love contributions! Here's how you can help:
 
 ---
 
-## 💬 Community & Support
-
 ### 🆘 Need Help?
-- **📖 Documentation**: Check our [comprehensive guide](documentation_guide.md)
 - **💬 Discussions**: Join our [GitHub Discussions](https://github.com/your-username/CodeStory/discussions)
 - **🐛 Issues**: Report bugs or request features
 
 ### 🌟 Show Your Support
 - ⭐ Star this repository if it helped you!
-- 🐦 Share on Twitter with `#CodeStory`
-- 📝 Write a blog post about your experience
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- **🤖 Google Gemini**: For powering our AI analysis
-- **🛠️ PocketFlow**: For the robust pipeline framework
-- **🎨 Mermaid**: For beautiful diagram generation
-- **👥 Contributors**: Everyone who helps make CodeStory better
-
----
-
-<div align="center">
-
-**Built with ❤️ by developers, for developers**
+=
 
 [⭐ Star](https://github.com/your-username/CodeStory) • [🐛 Report Bug](https://github.com/your-username/CodeStory/issues) • [💡 Request Feature](https://github.com/your-username/CodeStory/issues) • [📖 Documentation](documentation_guide.md)
 
