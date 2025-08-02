@@ -1,0 +1,7 @@
+google-genai
+python-dotenv
+pocketflow
+GitPython
+requests
+PyYAML
+pathlib
