@@ -5,3 +5,7 @@ GitPython
 requests
 PyYAML
 pathlib
+fastapi
+uvicorn[standard]
+pydantic
+python-multipart

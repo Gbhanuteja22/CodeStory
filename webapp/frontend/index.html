@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation Generator</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e1e1e1;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+        
+        .status-card {
+            border-left: 4px solid #667eea;
+            background: #f8f9ff;
+        }
+        
+        .status-running {
+            border-left-color: #ffa726;
+            background: #fff8e1;
+        }
+        
+        .status-completed {
+            border-left-color: #66bb6a;
+            background: #e8f5e8;
+        }
+        
+        .status-failed {
+            border-left-color: #ef5350;
+            background: #ffebee;
+        }
+        
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .file-card {
+            background: white;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .file-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        
+        .close-button {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab-button {
+            padding: 10px 20px;
+            border: 2px solid #e1e1e1;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function App() {
+            const [activeTab, setActiveTab] = useState('generate');
+            const [formData, setFormData] = useState({
+                repo_url: '',
+                local_path: '',
+                project_name: '',
+                language: 'english',
+                include_patterns: '',
+                exclude_patterns: '',
+                max_file_size: 150000,
+                max_abstractions: 10,
+                use_cache: true
+            });
+            const [currentTask, setCurrentTask] = useState(null);
+            const [tasks, setTasks] = useState([]);
+            const [outputFiles, setOutputFiles] = useState([]);
+            const [selectedFile, setSelectedFile] = useState(null);
+            const [loading, setLoading] = useState(false);
+            const [error, setError] = useState('');
+
+            useEffect(() => {
+                if (currentTask && (currentTask.status === 'running' || currentTask.status === 'queued')) {
+                    const interval = setInterval(() => {
+                        fetchTaskStatus(currentTask.task_id);
+                    }, 1000);
+                    return () => clearInterval(interval);
+                }
+            }, [currentTask]);
+
+            const fetchTaskStatus = async (taskId) => {
+                try {
+                    const response = await fetch(`/status/${taskId}`);
+                    if (response.ok) {
+                        const task = await response.json();
+                        setCurrentTask(task);
+                        
+                        if (task.status === 'completed' && !outputFiles.length) {
+                            fetchOutputFiles(task.task_id);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error fetching task status:', error);
+                }
+            };
+
+            const fetchOutputFiles = async (taskId) => {
+                try {
+                    const response = await fetch(`/output/${taskId}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        setOutputFiles(data.files || []);
+                    }
+                } catch (error) {
+                    console.error('Error fetching output files:', error);
+                }
+            };
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                setError('');
+                
+                if (!formData.repo_url && !formData.local_path) {
+                    setError('Please provide either a GitHub repository URL or a local directory path');
+                    setLoading(false);
+                    return;
+                }
+                
+                try {
+                    const payload = {
+                        repo_url: formData.repo_url || null,
+                        local_path: formData.local_path || null,
+                        project_name: formData.project_name || null,
+                        language: formData.language,
+                        include_patterns: formData.include_patterns ? formData.include_patterns.split(',').map(s => s.trim()).filter(s => s) : [],
+                        exclude_patterns: formData.exclude_patterns ? formData.exclude_patterns.split(',').map(s => s.trim()).filter(s => s) : [],
+                        max_file_size: formData.max_file_size,
+                        max_abstractions: formData.max_abstractions,
+                        use_cache: formData.use_cache
+                    };
+                    
+                    const response = await fetch('/generate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail || 'Failed to start generation');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    // Immediately fetch the task status
+                    const statusResponse = await fetch(`/status/${result.task_id}`);
+                    if (statusResponse.ok) {
+                        const task = await statusResponse.json();
+                        setCurrentTask(task);
+                        setActiveTab('status');
+                        setOutputFiles([]);
+                    }
+                } catch (error) {
+                    console.error('Error starting generation:', error);
+                    setError('Error starting generation: ' + error.message);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const handleInputChange = (field, value) => {
+                setFormData(prev => ({
+                    ...prev,
+                    [field]: value
+                }));
+            };
+
+            const GenerateTab = () => (
+                <div className="card">
+                    <h2 style={{marginBottom: '20px', color: '#333'}}>Generate Documentation</h2>
+                    {error && (
+                        <div style={{background: '#ffebee', color: '#c62828', padding: '15px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #ef5350'}}>
+                            {error}
+                        </div>
+                    )}
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label>GitHub Repository URL</label>
+                            <input
+                                type="url"
+                                placeholder="https://github.com/owner/repo"
+                                value={formData.repo_url}
+                                onChange={(e) => {
+                                    handleInputChange('repo_url', e.target.value);
+                                    if (e.target.value) handleInputChange('local_path', '');
+                                }}
+                            />
+                        </div>
+                        
+                        <div style={{textAlign: 'center', margin: '15px 0', color: '#666', fontWeight: 'bold'}}>
+                            OR
+                        </div>
+                        
+                        <div className="form-group">
+                            <label>Local Directory Path</label>
+                            <input
+                                type="text"
+                                placeholder="C:\\path\\to\\your\\project"
+                                value={formData.local_path}
+                                onChange={(e) => {
+                                    handleInputChange('local_path', e.target.value);
+                                    if (e.target.value) handleInputChange('repo_url', '');
+                                }}
+                            />
+                        </div>
+                        
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label>Project Name (Optional)</label>
+                                <input
+                                    type="text"
+                                    placeholder="Auto-detected if not provided"
+                                    value={formData.project_name}
+                                    onChange={(e) => handleInputChange('project_name', e.target.value)}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Language</label>
+                                <select
+                                    value={formData.language}
+                                    onChange={(e) => handleInputChange('language', e.target.value)}
+                                >
+                                    <option value="english">English</option>
+                                    <option value="spanish">Spanish</option>
+                                    <option value="french">French</option>
+                                    <option value="german">German</option>
+                                    <option value="chinese">Chinese</option>
+                                    <option value="japanese">Japanese</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label>Include File Patterns (Optional)</label>
+                                <input
+                                    type="text"
+                                    placeholder="*.py, *.js, *.md"
+                                    value={formData.include_patterns}
+                                    onChange={(e) => handleInputChange('include_patterns', e.target.value)}
+                                />
+                                <small style={{color: '#666', fontSize: '12px'}}>Comma-separated patterns. Leave empty for defaults.</small>
+                            </div>
+                            <div className="form-group">
+                                <label>Exclude File Patterns (Optional)</label>
+                                <input
+                                    type="text"
+                                    placeholder="tests/*, node_modules/*"
+                                    value={formData.exclude_patterns}
+                                    onChange={(e) => handleInputChange('exclude_patterns', e.target.value)}
+                                />
+                                <small style={{color: '#666', fontSize: '12px'}}>Comma-separated patterns. Leave empty for defaults.</small>
+                            </div>
+                        </div>
+                        
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label>Max Concepts to Identify</label>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max="20"
+                                    value={formData.max_abstractions}
+                                    onChange={(e) => handleInputChange('max_abstractions', parseInt(e.target.value))}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Max File Size (bytes)</label>
+                                <input
+                                    type="number"
+                                    min="1000"
+                                    max="1000000"
+                                    value={formData.max_file_size}
+                                    onChange={(e) => handleInputChange('max_file_size', parseInt(e.target.value))}
+                                />
+                            </div>
+                        </div>
+                        
+                        <div className="form-group">
+                            <label style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                                <input
+                                    type="checkbox"
+                                    checked={formData.use_cache}
+                                    onChange={(e) => handleInputChange('use_cache', e.target.checked)}
+                                />
+                                Use AI Response Caching (Recommended)
+                            </label>
+                        </div>
+                        
+                        <button type="submit" className="button" disabled={loading}>
+                            {loading ? 'Starting Generation...' : '🚀 Generate Documentation'}
+                        </button>
+                    </form>
+                </div>
+            );
+
+            const StatusTab = () => (
+                <div>
+                    {currentTask && (
+                        <div className={`card status-card status-${currentTask.status}`}>
+                            <h3>Current Task: {currentTask.task_id}</h3>
+                            <p><strong>Status:</strong> {currentTask.status}</p>
+                            <p><strong>Message:</strong> {currentTask.message}</p>
+                            
+                            <div className="progress-bar">
+                                <div
+                                    className="progress-fill"
+                                    style={{width: `${currentTask.progress}%`}}
+                                ></div>
+                            </div>
+                            <p>{currentTask.progress}% Complete</p>
+                            
+                            {currentTask.error && (
+                                <div style={{color: '#d32f2f', marginTop: '10px'}}>
+                                    <strong>Error:</strong> {currentTask.error}
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    
+                    {outputFiles.length > 0 && (
+                        <div className="card">
+                            <h3>Generated Documentation</h3>
+                            <div className="files-grid">
+                                {outputFiles.map((file, index) => (
+                                    <div
+                                        key={index}
+                                        className="file-card"
+                                        onClick={() => setSelectedFile(file)}
+                                    >
+                                        <h4>{file.filename}</h4>
+                                        <p style={{color: '#666', fontSize: '14px'}}>{file.path}</p>
+                                        <p style={{color: '#999', fontSize: '12px'}}>
+                                            {file.content.length} characters
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+
+            const HistoryTab = () => (
+                <div className="card">
+                    <h2 style={{marginBottom: '20px', color: '#333'}}>Task History</h2>
+                    {tasks.length === 0 ? (
+                        <p>No tasks found</p>
+                    ) : (
+                        tasks.map((task) => (
+                            <div key={task.task_id} className={`card status-card status-${task.status}`} style={{margin: '10px 0'}}>
+                                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                    <div>
+                                        <h4>{task.task_id}</h4>
+                                        <p>{task.message}</p>
+                                        <small>Status: {task.status} ({task.progress}%)</small>
+                                    </div>
+                                    <div>
+                                        {task.status === 'completed' && (
+                                            <button
+                                                className="button"
+                                                style={{width: 'auto', padding: '8px 16px'}}
+                                                onClick={() => {
+                                                    setCurrentTask(task);
+                                                    fetchOutputFiles(task.task_id);
+                                                    setActiveTab('status');
+                                                }}
+                                            >
+                                                View Results
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+            );
+
+            return (
+                <div className="container">
+                    <div className="header">
+                        <h1>🚀 Documentation Generator</h1>
+                        <p>Transform your code into comprehensive, beginner-friendly tutorials</p>
+                    </div>
+
+                    <div className="tab-buttons">
+                        <button
+                            className={`tab-button ${activeTab === 'generate' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('generate')}
+                        >
+                            Generate
+                        </button>
+                        <button
+                            className={`tab-button ${activeTab === 'status' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('status')}
+                        >
+                            Status
+                        </button>
+                        <button
+                            className={`tab-button ${activeTab === 'history' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('history')}
+                        >
+                            History
+                        </button>
+                    </div>
+
+                    {activeTab === 'generate' && <GenerateTab />}
+                    {activeTab === 'status' && <StatusTab />}
+                    {activeTab === 'history' && <HistoryTab />}
+
+                    {selectedFile && (
+                        <div className="modal" onClick={() => setSelectedFile(null)}>
+                            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                                <button className="close-button" onClick={() => setSelectedFile(null)}>
+                                    ×
+                                </button>
+                                <h2>{selectedFile.filename}</h2>
+                                <pre>{selectedFile.content}</pre>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+@echo off
+echo 🚀 Starting CodeStory Backend Server...
+echo.
+echo Activating virtual environment...
+call .venv\Scripts\activate.bat
+echo.
+echo Starting FastAPI server...
+uvicorn simple_backend:app --host 0.0.0.0 --port 8000 --reload
+pause

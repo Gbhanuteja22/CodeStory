@@ -1,0 +1,107 @@
+# CodeStory Webapp - Simple Run Instructions ✅ ALL ISSUES FIXED
+
+## How to Run the CodeStory Tutorial Generator Webapp
+
+### IMPORTANT: All major issues have been resolved! ✅
+- ✅ Fixed "Could not import module simple_backend" error  
+- ✅ Fixed "No tutorial files found" error
+- ✅ Tutorial files now properly saved to output/ directory
+- ✅ Frontend can now view and navigate generated tutorials
+
+### IMPORTANT: Use these exact commands in order!
+
+## Step 1: Start Backend Server
+Open PowerShell/Command Prompt in E:\CodeStory and run:
+
+```powershell
+cd E:\CodeStory
+.\.venv\Scripts\Activate.ps1
+uvicorn simple_backend:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Wait for this message: "INFO: Uvicorn running on http://0.0.0.0:8000"
+Keep this terminal open - DO NOT CLOSE IT!
+
+## Step 2: Start Frontend (In NEW Terminal)
+Open a NEW PowerShell/Command Prompt and run:
+
+```
+cd E:\CodeStory\webapp\frontend
+npm install
+npm start
+```
+
+Wait for: "webpack compiled successfully" 
+Your browser should open http://localhost:3000 automatically
+
+## Step 3: Test the Application ✅ NOW WORKING
+1. Go to http://localhost:3000 in your browser
+2. Enter a GitHub URL (like: https://github.com/Gbhanuteja22/Voice-Based-Search-Engine)
+3. Click "Generate Tutorial"
+4. Watch the progress bar
+5. View the generated tutorial with multiple sections ✅ FILES NOW CREATED
+6. Navigate between tutorial sections ✅ FIXED
+7. Use voice reader functionality ✅ WORKING
+
+## Troubleshooting
+
+### If Backend Fails:
+- Make sure you're in E:\CodeStory directory (NOT webapp subdirectory)
+- Virtual environment must be activated (you should see (.venv) in prompt)
+- Check if simple_backend.py exists in root directory
+- The error "Could not import module simple_backend" means wrong directory
+
+### If Frontend Fails:
+- Make sure you're in E:\CodeStory\webapp\frontend directory  
+- Run "npm install" first if you get module errors
+- Make sure backend is running on port 8000
+
+### If "Failed to fetch" error:
+- Restart backend server
+- Check http://localhost:8000 shows API message
+- Make sure both servers are running simultaneously
+
+## Quick Test Commands
+
+Test backend is working:
+```
+curl http://localhost:8000
+```
+Should return: {"message":"CodeStory Tutorial Generator API","status":"running"}
+
+Test frontend is working:
+Open browser to http://localhost:3000
+
+## Features Available:
+✅ Tutorial Generation from GitHub URLs
+✅ 5 Languages (English, Hindi, Telugu, Hinglish, Telgish)  
+✅ Dark/Light Theme Toggle
+✅ Voice Reader (Text-to-Speech)
+✅ PDF Generation
+✅ Progress Tracking
+✅ Responsive Design
+
+## File Structure (for reference):
+```
+E:\CodeStory\
+├── simple_backend.py         # ← Main backend server
+├── .venv\                     # ← Virtual environment  
+└── webapp\
+    └── frontend\              # ← React frontend
+        ├── src\
+        ├── package.json
+        └── node_modules\
+```
+
+## IMPORTANT NOTES:
+- Always activate virtual environment first: .\.venv\Scripts\activate
+- Keep backend terminal running while using the app
+- Frontend and backend must run simultaneously  
+- Backend runs on port 8000, Frontend on port 3000
+- Use Ctrl+C to stop servers when done
+
+## Success Indicators:
+✅ Backend shows: "Application startup complete"
+✅ Frontend shows: "webpack compiled successfully"  
+✅ Browser opens http://localhost:3000 automatically
+✅ Tutorial generation works without "Failed to fetch" errors

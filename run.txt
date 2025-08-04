@@ -1,0 +1,144 @@
+# CodeStory Tutorial Generator - Setup Instructions
+
+## 🚨 IMPORTANT: Backend Fix Applied ✅ COMPLETE
+The backend has been updated to fix ALL issues:
+✅ Fixed 'setup_workspace' error
+✅ Fixed "No tutorial files found" error  
+✅ Tutorial files now properly saved to disk
+✅ Added file serving endpoints for frontend access
+Please restart the backend server to apply all fixes.
+
+## Prerequisites
+1. Node.js (version 14 or higher)
+2. npm (comes with Node.js)  
+3. Python 3.7+ (for backend)
+4. Git (optional, for cloning repositories)
+
+## Quick Start (Recommended)
+
+### Step 1: Start Backend Server (FROM ROOT DIRECTORY E:\CodeStory)
+```bash
+.\start_backend_fixed.bat
+```
+OR manually:
+```powershell
+# Make sure you're in E:\CodeStory (root directory)
+cd E:\CodeStory
+.\.venv\Scripts\Activate.ps1
+uvicorn simple_backend:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### Step 2: Start Frontend (in new terminal)
+```bash
+.\start_frontend.bat  
+```
+OR manually:
+```bash
+cd webapp/frontend
+npm install
+npm start
+```
+
+## Manual Setup (If Quick Start Fails)
+
+### Backend Setup
+
+#### Step 1: Activate Virtual Environment (if using)
+```bash
+.\.venv\Scripts\Activate.ps1
+```
+
+#### Step 2: Install Python Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+#### Step 3: Start the Backend Server (FROM ROOT DIRECTORY E:\CodeStory)
+```powershell
+# Make sure you're in E:\CodeStory directory
+cd E:\CodeStory
+uvicorn simple_backend:app --host 0.0.0.0 --port 8000 --reload
+```
+The backend will start on http://localhost:8000
+
+### Frontend Setup
+
+#### Step 4: Navigate to Frontend Directory
+```bash
+cd webapp/frontend
+```
+
+#### Step 5: Install Node.js Dependencies
+```bash
+npm install
+```
+
+#### Step 6: Start the Frontend Development Server
+```bash
+npm start
+```
+The frontend will start on http://localhost:3000
+
+## ✅ What Should Happen
+
+1. **Backend**: Console should show "FastAPI server running on http://localhost:8000"
+2. **Frontend**: Browser should automatically open http://localhost:3000  
+3. **Integration**: Frontend should connect to backend without "Failed to fetch" errors
+4. **Tutorial Generation**: Files will be created in output/ directory and visible in frontend
+5. **File Access**: Generated tutorials can be viewed, read aloud, and navigated
+
+## 🔧 Troubleshooting
+
+### ❌ "AttributeError: 'DocumentationGenerator' object has no attribute 'setup_workspace'"
+**Solution**: Restart the backend server using `.\start_backend_fixed.bat`
+
+### ❌ "No tutorial files found" error
+**Solution**: This has been FIXED! The backend now properly saves tutorial files to disk.
+
+### ❌ "Failed to fetch" in frontend
+**Solutions**:
+1. Ensure backend is running on localhost:8000
+2. Check browser console for CORS errors
+3. Restart both frontend and backend
+
+### ❌ "Module not found" errors in frontend  
+**Solution**: Run `npm install` in the `webapp/frontend` directory
+
+### ❌ "Port already in use"
+**Solutions**:
+1. Kill existing processes: `taskkill /f /im python.exe` (Windows)
+2. Change ports in configuration files
+
+## 🎯 Expected Results
+
+- **Backend API**: http://localhost:8000/docs (FastAPI documentation)
+- **Frontend App**: http://localhost:3000 (React application)
+- **Features**: 5 languages, voice reader, modern UI, tutorial generation
+
+## 📁 Correct File Structure
+```
+CodeStory/
+├── simple_backend.py             # ✅ MAIN backend server (use this one)
+├── webapp/
+│   ├── backend/app.py           # ❌ OLD backend (missing dependencies)
+│   └── frontend/                # ✅ React frontend  
+│       ├── src/
+│       │   ├── components/
+│       │   ├── pages/
+│       │   ├── utils/
+│       │   └── locales/         # ✅ Fixed location
+│       └── package.json
+├── start_backend_fixed.bat      # ✅ Use this to start backend
+├── start_frontend.bat           # ✅ Use this to start frontend  
+└── requirements.txt
+```
+
+## 🏁 Final Notes
+
+- ✅ Fixed backend method name issue  
+- ✅ Moved translation files to correct location
+- ✅ Updated import paths
+- ✅ Both servers need to run simultaneously  
+- ✅ Use the provided batch files for easiest startup
+- ✅ FIXED: Tutorial files now properly saved and accessible
+- ✅ FIXED: "No tutorial files found" error resolved

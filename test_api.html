@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>CodeStory API Test</h1>
+    <button onclick="testAPI()">Test Generate API</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch('http://localhost:8000/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        repo_url: 'https://github.com/Gbhanuteja22/Voice-Based-Search-Engine',
+                        include_patterns: ['*.py', '*.js', '*.md'],
+                        exclude_patterns: ['tests/*', 'node_modules/*'],
+                        language: 'english',
+                        max_abstractions: 5,
+                        use_cache: true
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                
+                // If we got a task_id, test the status endpoint
+                if (data.task_id) {
+                    setTimeout(async () => {
+                        try {
+                            const statusResponse = await fetch(`http://localhost:8000/status/${data.task_id}`);
+                            const statusData = await statusResponse.json();
+                            resultDiv.innerHTML += `<hr><h3>Status:</h3><pre>${JSON.stringify(statusData, null, 2)}</pre>`;
+                        } catch (err) {
+                            resultDiv.innerHTML += `<hr><h3>Status Error:</h3><pre>${err.message}</pre>`;
+                        }
+                    }, 1000);
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<div style="color: red;">Error: ${error.message}</div>`;
+                console.error('API Test Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
